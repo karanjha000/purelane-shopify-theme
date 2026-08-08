@@ -30,7 +30,7 @@
                 {% assign product = block.settings[product_key] %}
                 {% if product != blank %}
                   {% if product.featured_image %}
-                    <img class="pimg" src="{{ product.featured_image | image_url: width: 124 }}" alt="" loading="lazy">
+                    <img class="pimg" src="{{ product.featured_image | image_url: width: 124 }}" alt="" loading="lazy" width="124" height="124">
                   {% else %}
                     <span class="tile" role="img">{% render 'purelane-icon', icon: 'leaf' %}</span>
                   {% endif %}

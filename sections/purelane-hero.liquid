@@ -7,27 +7,28 @@
 
 {{ 'purelane-base.css' | asset_url | stylesheet_tag }}
 {{ 'purelane-hero.css' | asset_url | stylesheet_tag }}
+<script src="{{ 'purelane-reveal.js' | asset_url }}" defer></script>
 
 {%- liquid
   assign badge_blocks = section.blocks | where: 'type', 'badge'
   assign stage_blocks = section.blocks | where: 'type', 'stage'
 -%}
 
-<section class="hero" data-section-id="{{ section.id }}">
-  <div class="hero-grid">
+<section class="purelane-hero" data-section-id="{{ section.id }}">
+  {% if badge_blocks.size > 0 %}
+    <div class="purelane-badges glass-2" aria-label="Product promises">
+      {% for block in badge_blocks %}
+        <div class="purelane-badge" {{ block.shopify_attributes }}>
+          <span class="bi">{% render 'purelane-icon', icon: block.settings.icon %}</span>
+          <span>{{ block.settings.label }}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
 
-    {% if badge_blocks.size > 0 %}
-      <div class="badges glass-2" aria-label="Product promises">
-        {% for block in badge_blocks %}
-          <div class="badge" {{ block.shopify_attributes }}>
-            <span class="bi">{% render 'purelane-icon', icon: block.settings.icon %}</span>
-            <span>{{ block.settings.label }}</span>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
+  <div class="purelane-hero-grid">
 
-    <div class="hero-copy">
+    <div class="purelane-hero-copy">
       <h1 class="d1 rv in">
         {{ section.settings.headline_line_1 }}<br>
         {{ section.settings.headline_line_2 }}<br>
@@ -39,7 +40,7 @@
         <i></i>
       </div>
       <p class="lede rv rv-d2">{{ section.settings.subheading }}</p>
-      <div class="hero-cta rv rv-d3">
+      <div class="purelane-hero-cta rv rv-d3">
         {% if section.settings.primary_cta_text != blank %}
           <a class="btn btn-primary" href="{{ section.settings.primary_cta_link | default: '#shop' }}">
             {{ section.settings.primary_cta_text }}
@@ -52,7 +53,7 @@
       </div>
 
       {% if badge_blocks.size > 0 %}
-        <div class="badgestrip rv rv-d4">
+        <div class="purelane-badgestrip rv rv-d4">
           {% for block in badge_blocks %}
             <div class="glass-2">
               {% render 'purelane-icon', icon: block.settings.icon %}
@@ -64,19 +65,19 @@
     </div>
 
     {% if stage_blocks.size > 0 %}
-      <div class="hero-prod" id="heroProd-{{ section.id }}">
-        <div class="hstage" id="hstage-{{ section.id }}">
+      <div class="purelane-hero-prod" id="heroProd-{{ section.id }}">
+        <div class="purelane-hstage" id="hstage-{{ section.id }}">
           {% for block in stage_blocks %}
             {%- liquid
               assign n = forloop.index
               assign bottle_classes = 'p-kbtl,p-tbtl,p-mbtl' | split: ','
             -%}
-            <div class="hslide hs{{ n }}{% if forloop.first %} on{% endif %}" data-n="{{ n }}" {{ block.shopify_attributes }}>
+            <div class="purelane-hslide hs{{ n }}{% if forloop.first %} on{% endif %}" data-n="{{ n }}" {{ block.shopify_attributes }}>
               {% for i in (1..block.settings.bottle_count) %}
                 {% assign bclass = bottle_classes[forloop.index0] | default: 'p-kbtl' %}
-                <span class="hp {{ bclass }} {{ 'a,b,c' | split: ',' | slice: forloop.index0 }} d{{ forloop.index }}" role="img" aria-label="{{ block.settings.label }} illustration {{ forloop.index }}"></span>
+                <span class="purelane-hp {{ bclass }} {{ 'a,b,c' | split: ',' | slice: forloop.index0 }} d{{ forloop.index }}" role="img" aria-label="{{ block.settings.label }} illustration {{ forloop.index }}"></span>
               {% endfor %}
-              <div class="glass-2 ptag">
+              <div class="glass-2 purelane-ptag">
                 <span class="lbl">{{ block.settings.label }}</span>
                 <span class="val">
                   <strong>{{ block.settings.price }}</strong>
@@ -87,7 +88,7 @@
             </div>
           {% endfor %}
         </div>
-        <div class="hdots" id="hdots-{{ section.id }}" role="tablist" aria-label="Choose bundle size">
+        <div class="purelane-hdots" id="hdots-{{ section.id }}" role="tablist" aria-label="Choose bundle size">
           {% for block in stage_blocks %}
             <button type="button" class="{% if forloop.first %}on{% endif %}" role="tab" aria-selected="{% if forloop.first %}true{% else %}false{% endif %}" aria-label="Show {{ block.settings.bottle_count }} product{% if block.settings.bottle_count != 1 %}s{% endif %}" data-n="{{ forloop.index }}"></button>
           {% endfor %}
@@ -99,14 +100,6 @@
 </section>
 
 <script src="{{ 'purelane-hero.js' | asset_url }}" defer></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    if (window.PurelaneHero) window.PurelaneHero.init('{{ section.id }}');
-  });
-  document.addEventListener('shopify:section:load', function (e) {
-    if (e.detail.sectionId === '{{ section.id }}' && window.PurelaneHero) window.PurelaneHero.init('{{ section.id }}');
-  });
-</script>
 
 {% schema %}
 {

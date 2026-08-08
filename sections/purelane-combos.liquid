@@ -25,9 +25,7 @@
     <div class="comborail rv" role="list">
       {% for block in section.blocks %}
         {% if block.type == 'combo' %}
-          {%- liquid
-            assign items = block.settings.items | split: '||'
-          -%}
+          {%- liquid -%}
           <article class="glass combo{% if block.settings.featured %} hero-combo{% endif %}" role="listitem" {{ block.shopify_attributes }}>
             <div class="tray">
               {% if block.settings.savings_text != blank %}<span class="save">{{ block.settings.savings_text }}</span>{% endif %}

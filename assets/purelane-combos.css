@@ -1,27 +1,27 @@
 .purelane-combos{padding:var(--sec-y) 0}
 
 .comborail{display:flex;gap:14px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;
-  padding-bottom:6px;-webkit-overflow-scrolling:touch}
+  padding-bottom:6px;-webkit-overflow-scrolling:touch;justify-content:center}
 .comborail::-webkit-scrollbar{display:none}
 
 .combo{flex:0 0 302px;scroll-snap-align:start;display:flex;flex-direction:column;padding:0;transition:.4s var(--ease)}
 .combo:hover{transform:translateY(-5px)}
-.combo.hero-combo{border-color:rgba(240,160,60,.42);box-shadow:0 26px 74px rgba(18,12,34,.44),0 0 0 1px rgba(240,160,60,.2),var(--g-inset)}
+.combo.hero-combo{border-color:rgba(201,118,29,.46);box-shadow:0 22px 54px rgba(58,44,112,.13),0 0 0 1px rgba(201,118,29,.22),var(--g-inset)}
 
-.combo .tray{padding:14px 14px 13px;border-bottom:1px solid rgba(236,230,247,.13);position:relative}
+.combo .tray{padding:14px 14px 13px;border-bottom:1px solid rgba(75,58,143,.12);position:relative;background:linear-gradient(162deg,rgba(255,255,255,.56),rgba(236,230,247,.34))}
 .combo .save{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;
-  background:rgba(23,16,43,.5);border:1px solid rgba(240,160,60,.36);color:var(--accent);padding:4px 9px;border-radius:999px;margin-bottom:10px}
+  background:rgba(255,255,255,.84);border:1px solid rgba(201,118,29,.34);color:#4f7d10;padding:4px 9px;border-radius:999px;margin-bottom:10px}
 .combo .flag{position:absolute;top:14px;right:14px;font-size:8.6px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;
-  background:linear-gradient(135deg,var(--accent-2),#5d8d1c);color:#08211a;padding:4px 9px;border-radius:999px}
+  background:linear-gradient(135deg,#00706a,#004b46);color:#f4fdf6;padding:4px 9px;border-radius:999px}
 
 .stack{display:flex;align-items:flex-end;gap:3px}
 .stack .it{flex:1 1 0;min-width:0;text-align:center}
-.stack .it .pimg{height:66px;width:auto;max-width:100%;margin:0 auto 8px;object-fit:contain;filter:drop-shadow(0 8px 13px rgba(1,24,22,.5))}
+.stack .it .pimg{height:66px;width:auto;max-width:100%;margin:0 auto 8px;object-fit:contain;filter:drop-shadow(0 5px 8px rgba(0,74,66,.13))}
 .stack .it .tile{height:66px;width:44px;margin:0 auto 8px;display:grid;place-items:center;border-radius:9px;
-  background:rgba(255,255,255,.08);border:1px dashed rgba(236,230,247,.26);color:var(--accent)}
+  background:rgba(255,255,255,.5);border:1px dashed rgba(75,58,143,.26);color:#4f7d10}
 .stack .it .tile svg{width:17px;height:17px}
 .stack .it span{display:block;font-size:8.6px;line-height:1.32;color:var(--paper-2);font-weight:600}
-.stack .plus{flex:0 0 9px;color:var(--accent);font-weight:800;font-size:12px;padding-bottom:30px;text-align:center}
+.stack .plus{flex:0 0 9px;color:#b8701c;font-weight:800;font-size:12px;padding-bottom:30px;text-align:center}
 
 .combo .body{padding:15px 16px 18px;display:flex;flex-direction:column;flex:1}
 .combo .body h3{font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;text-transform:uppercase;letter-spacing:.01em;color:var(--surface)}
