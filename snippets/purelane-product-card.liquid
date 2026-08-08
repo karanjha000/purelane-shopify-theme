@@ -1,0 +1,95 @@
+{% comment %}
+  Renders a single product card for the bestsellers shelf / shop grid.
+  Accepts:
+    - product: product object
+    - card_index: integer, used only for stagger animation delay class (rv-d1..rv-d3)
+    - badge_text: optional override string ("Best seller" / "Top rated" / "New").
+        Falls back to metafield custom.shelf_badge, then to nothing.
+{% endcomment %}
+
+{%- liquid
+  assign badge = badge_text
+  if badge == blank and product.metafields.custom.shelf_badge != blank
+    assign badge = product.metafields.custom.shelf_badge.value
+  endif
+
+  assign stagger = ''
+  if card_index == 2
+    assign stagger = ' rv-d1'
+  elsif card_index == 3
+    assign stagger = ' rv-d2'
+  elsif card_index >= 4
+    assign stagger = ' rv-d3'
+  endif
+
+  assign compare_price = product.compare_at_price
+  assign price = product.price
+  assign show_compare = false
+  if compare_price > price
+    assign show_compare = true
+    assign discount = compare_price | minus: price | times: 100.0 | divided_by: compare_price | round
+  endif
+
+  assign rating_value = product.metafields.reviews.rating.value.rating | default: product.metafields.custom.rating.value
+  assign rating_count = product.metafields.reviews.rating_count.value | default: product.metafields.custom.rating_count.value
+-%}
+
+<article class="glass card rv{{ stagger }}{% if product.available == false %} card--sold-out{% endif %}">
+  <a href="{{ product.url | default: '#' }}" class="card-link" aria-label="{{ product.title | escape }}">
+    <div class="shot">
+      {% if badge != blank %}
+        <span class="pill">{{ badge }}</span>
+      {% endif %}
+      {% if product.available == false %}
+        <span class="pill pill--sold-out">Sold out</span>
+      {% endif %}
+
+      {% if product.featured_image %}
+        <img
+          class="shot-img"
+          srcset="{{ product.featured_image | image_url: width: 200 }} 200w,
+                  {{ product.featured_image | image_url: width: 400 }} 400w"
+          sizes="(min-width: 860px) 220px, 45vw"
+          src="{{ product.featured_image | image_url: width: 400 }}"
+          alt="{{ product.featured_image.alt | default: product.title | escape }}"
+          loading="lazy"
+          width="{{ product.featured_image.width }}"
+          height="{{ product.featured_image.height }}"
+        >
+      {% else %}
+        {%- comment -%} No native image: use a neutral placeholder so the card layout never breaks. {%- endcomment -%}
+        <span class="shot-placeholder" role="img" aria-label="{{ product.title | escape }} — image coming soon">
+          {{ 'product-1' | placeholder_svg_tag: 'shot-placeholder-svg' }}
+        </span>
+      {% endif %}
+    </div>
+
+    <h4 class="card-title">{{ product.title }}</h4>
+
+    {% if rating_value != blank %}
+      <div class="rate">
+        <b>&#9733; {{ rating_value }}</b>
+        {% if rating_count != blank %} &middot; {{ rating_count }} reviews{% endif %}
+      </div>
+    {% endif %}
+
+    <div class="pr">
+      <strong>{{ price | money_without_trailing_zeros }}</strong>
+      {% if show_compare %}
+        <s>{{ compare_price | money_without_trailing_zeros }}</s>
+        <em>{{ discount }}% off</em>
+      {% endif %}
+    </div>
+  </a>
+
+  {% if product.available %}
+    {%- form 'product', product, class: 'card-form' -%}
+      <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+      <button type="submit" class="btn btn-ghost btn-sm" {% if product.variants.size > 1 %}disabled aria-disabled="true" title="Choose options on the product page"{% endif %}>
+        {% if product.variants.size > 1 %}Choose options{% else %}Add to cart{% endif %}
+      </button>
+    {%- endform -%}
+  {% else %}
+    <button class="btn btn-ghost btn-sm" disabled aria-disabled="true">Sold out</button>
+  {% endif %}
+</article>

@@ -1,0 +1,58 @@
+.purelane-shop{padding:var(--sec-y) 0}
+
+.shelf{display:grid;gap:14px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:860px){.shelf{grid-template-columns:repeat(4,1fr)}}
+
+.card{padding:16px;display:flex;flex-direction:column;transition:.4s var(--ease)}
+.card:hover{transform:translateY(-5px)}
+.card-link{display:flex;flex-direction:column;flex:1;color:inherit}
+
+.card .shot{
+  height:150px;border-radius:14px;margin-bottom:14px;display:grid;place-items:center;
+  position:relative;overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,255,255,.60),rgba(236,230,247,.42));
+}
+@media(max-width:859px){.card .shot{height:126px}}
+
+.card .shot-img{height:122px;width:auto;max-width:100%;object-fit:contain;filter:drop-shadow(0 8px 13px rgba(0,74,66,.13))}
+@media(max-width:859px){.card .shot-img{height:108px}}
+
+/* No native image on the product: neutral placeholder, never a broken layout */
+.shot-placeholder{display:flex;align-items:center;justify-content:center;width:100%;height:100%;opacity:.4}
+.shot-placeholder-svg{width:64px;height:64px}
+
+.card .pill{
+  position:absolute;top:9px;left:9px;font-size:8.5px;font-weight:800;letter-spacing:.13em;text-transform:uppercase;
+  background:rgba(255,255,255,.86);border:1px solid rgba(201,118,29,.34);color:#4f7d10;
+  padding:5px 9px;border-radius:999px;
+}
+.card .pill--sold-out{
+  left:auto;right:9px;
+  background:rgba(23,16,43,.82);border-color:rgba(236,230,247,.3);color:var(--paper);
+}
+
+/* Sold-out state: whole card dims, CTA becomes a disabled "Sold out" button */
+.card--sold-out{opacity:.62}
+.card--sold-out:hover{transform:none}
+.card--sold-out .shot-img{filter:grayscale(1) drop-shadow(0 8px 13px rgba(0,74,66,.13))}
+
+/* Long product titles: clamp to 2 lines instead of pushing the price row down
+   and breaking grid alignment across the row */
+.card-title{
+  font-family:'Outfit',sans-serif;font-size:13.5px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.03em;color:var(--surface);line-height:1.2;margin-bottom:7px;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  min-height:2.4em;
+}
+
+.card .rate{font-size:11.5px;color:var(--paper-2);margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.card .rate b{color:var(--accent);font-weight:700}
+
+.card .pr{margin-top:auto;display:flex;align-items:baseline;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.card .pr strong{font-family:'Outfit',sans-serif;font-size:18px;color:var(--surface);font-weight:700}
+.card .pr s{font-size:12px;color:var(--paper-3)}
+.card .pr em{font-style:normal;font-size:10px;font-weight:800;letter-spacing:.08em;color:var(--accent)}
+
+.card-form,.card .btn{width:100%;justify-content:center}
+
+.shop-grid-empty{display:none}
