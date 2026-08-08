@@ -1,0 +1,99 @@
+{% comment %}
+  Customer reviews auto-marquee. Review cards are merchant-editable
+  blocks (no native Shopify review object without an app installed) —
+  the track is duplicated once in the DOM for a seamless CSS loop, and
+  pauses on hover/focus/reduced-motion for accessibility.
+{% endcomment %}
+
+{{ 'purelane-base.css' | asset_url | stylesheet_tag }}
+{{ 'purelane-reviews.css' | asset_url | stylesheet_tag }}
+
+{%- assign review_blocks = section.blocks | where: 'type', 'review' -%}
+
+<section class="sec revband" id="{{ section.settings.anchor_id | default: 'reviews' }}" data-section-id="{{ section.id }}">
+  <div class="wrap">
+    <div class="revhead rv">
+      {% if section.settings.kicker != blank %}<span class="kicker">{{ section.settings.kicker }}</span>{% endif %}
+      {% if section.settings.rating != blank %}
+        <span class="agg"><span class="st" aria-hidden="true">&#9733;&#9733;&#9733;&#9733;&#9733;</span> <b>{{ section.settings.rating }}</b> from {{ section.settings.review_count | default: 'thousands of' }} reviews</span>
+      {% endif %}
+      {% if section.settings.homes_count != blank %}
+        <span class="agg">Loved by <b>{{ section.settings.homes_count }}</b> homes</span>
+      {% endif %}
+    </div>
+  </div>
+
+  {% if review_blocks.size > 0 %}
+    <div class="revrail rv" aria-label="Customer reviews" tabindex="0">
+      <div class="revtrack">
+        {% for block in review_blocks %}
+          <article class="glass-2 rcard" {{ block.shopify_attributes }}>
+            <div class="st" aria-label="{{ block.settings.rating | default: 5 }} out of 5 stars">
+              {% for i in (1..5) %}{% if i <= block.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}
+            </div>
+            <h5>{{ block.settings.headline }}</h5>
+            <p>{{ block.settings.body }}</p>
+            <div class="who">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
+              <b>{{ block.settings.reviewer_name }}</b>
+              {% if block.settings.product_tag != blank %}<span>&middot; {{ block.settings.product_tag }}</span>{% endif %}
+            </div>
+          </article>
+        {% endfor %}
+        {% comment %} Duplicate track for seamless -50% loop {% endcomment %}
+        {% for block in review_blocks %}
+          <article class="glass-2 rcard" aria-hidden="true">
+            <div class="st">{% for i in (1..5) %}{% if i <= block.settings.rating %}&#9733;{% else %}&#9734;{% endif %}{% endfor %}</div>
+            <h5>{{ block.settings.headline }}</h5>
+            <p>{{ block.settings.body }}</p>
+            <div class="who">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 13 4 4L19 7"/></svg>
+              <b>{{ block.settings.reviewer_name }}</b>
+              {% if block.settings.product_tag != blank %}<span>&middot; {{ block.settings.product_tag }}</span>{% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+    </div>
+  {% endif %}
+</section>
+
+{% schema %}
+{
+  "name": "Reviews rail",
+  "tag": "section",
+  "class": "section-purelane-reviews",
+  "settings": [
+    { "type": "text", "id": "anchor_id", "label": "Section anchor ID", "default": "reviews" },
+    { "type": "text", "id": "kicker", "label": "Kicker", "default": "That's what they said" },
+    { "type": "text", "id": "rating", "label": "Aggregate rating", "default": "4.8" },
+    { "type": "text", "id": "review_count", "label": "Review count text", "default": "8,000+" },
+    { "type": "text", "id": "homes_count", "label": "Homes count text", "default": "12 lakh+" }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review card",
+      "settings": [
+        { "type": "range", "id": "rating", "label": "Star rating", "min": 1, "max": 5, "step": 1, "default": 5 },
+        { "type": "text", "id": "headline", "label": "Headline", "default": "Works like a charm" },
+        { "type": "textarea", "id": "body", "label": "Review text", "default": "Finally an eco option that cleans as well as the chemical detergent I used for years, and it smells better." },
+        { "type": "text", "id": "reviewer_name", "label": "Reviewer name", "default": "Anita" },
+        { "type": "text", "id": "product_tag", "label": "Product tag", "default": "Laundry detergent" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Reviews rail",
+      "blocks": [
+        { "type": "review" },
+        { "type": "review", "settings": { "headline": "Best dishwash ever", "body": "Our old dishwash left my help with dry, cracked skin. That stopped completely after we switched.", "reviewer_name": "Priya", "product_tag": "Dishwash gel" } },
+        { "type": "review", "settings": { "headline": "Great product, great packaging", "body": "Very soft on hands with a lovely fragrance, and it feels good to be using far less plastic.", "reviewer_name": "Sunita", "product_tag": "Liquid handwash" } },
+        { "type": "review", "settings": { "headline": "Dog friendly", "body": "We switched because chemical floor cleaners were setting off my dog's allergies. No reactions since.", "reviewer_name": "Rohit S.", "product_tag": "Floor cleaner" } },
+        { "type": "review", "settings": { "headline": "Sparkling taps again", "body": "Hard water had ruined our bathroom fittings. Two sprays and the scale wipes straight off, no scrubbing.", "reviewer_name": "Verified buyer", "product_tag": "Tap cleaner" } }
+      ]
+    }
+  ]
+}
+{% endschema %}
